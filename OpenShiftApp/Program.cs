@@ -25,7 +25,9 @@ namespace OpenShiftApp
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
                     webBuilder.UseStartup<Startup>();
-                    webBuilder.UseUrls("http://*:" + Environment.GetEnvironmentVariable("PORT"));
+                    
+                    //openshift and heroku fixes big port should be used
+                    //webBuilder.UseUrls("http://*:" + Environment.GetEnvironmentVariable("PORT"));
                 });
     }
 }

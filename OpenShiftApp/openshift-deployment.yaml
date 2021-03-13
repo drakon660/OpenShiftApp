@@ -1,3 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: openshiftapp-config
+  namespace: drakon660-code
+data:
+  name: hello  
+
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -16,7 +25,28 @@ spec:
     spec:
       containers:
       - name: openshiftappv1
-        image:  drakon660/kubernetes:openshiftappv1
+        image:  drakon660/kubernetes:openshiftappv2
         ports:
-        - containerPort: 80
-        - containerPort: 443        
+        - containerPort: 9000             
+        env:
+        - name: PORT  
+          value: "9000"
+        - name: openshiftapp__name          
+          valueFrom:
+            configMapKeyRef:
+              name: openshiftapp-config
+              key: name
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openshiftapp-service
+  namespace: drakon660-code
+spec:
+  selector:
+    app: openshiftapp
+  ports:
+    - protocol: TCP
+      port: 30011
+      targetPort: 9000
